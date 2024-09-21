@@ -13,41 +13,67 @@ def validate_input(data):
 
 # Function to call Flask API
 def get_prediction(data):
-    url = "http://127.0.0.1:10000/predict"  # Update with the correct host if deployed remotely
+    url = "https://heart-failure-predictor-model-2.onrender.com/predict"  # Update with the correct host if deployed remotely
     headers = {'Content-Type': 'application/json'}
     response = requests.post(url, data=json.dumps(data), headers=headers)
     return response.json()
 
-# Multi-page navigation
-st.sidebar.title("Navigation")
-page = st.sidebar.selectbox("Select Page", ["Home", "Heart Failure Prediction"])
+# Initialize session state for navigation
+if 'page' not in st.session_state:
+    st.session_state.page = 'home'
 
-if page == "Home":
+# Navigation buttons
+if st.session_state.page == 'home':
     # Home Page Content
     st.title("Welcome to the Heart Failure Prediction App")
     st.write("""
         This is an app that predicts the likelihood of heart failure based on clinical data.
-        Navigate to the "Heart Failure Prediction" page to input data and get a prediction.
+        Click the button below to input data and get a prediction.
     """)
-    st.image("https://cdn.pixabay.com/photo/2015/07/05/13/44/heart-832533_1280.jpg", use_column_width=True)
+    
 
-elif page == "Heart Failure Prediction":
+    if st.button("Go to Heart Failure Prediction"):
+        st.session_state.page = 'prediction'
+        st.stop()
+
+elif st.session_state.page == 'prediction':
     # Prediction Page Content
     st.title("Heart Failure Prediction")
 
     # Form inputs for prediction
-    age = st.number_input('Age', min_value=0.0, format="%.1f")
-    anaemia = st.selectbox('Anaemia (1 = Yes, 0 = No)', [0, 1])
-    creatinine_phosphokinase = st.number_input('Creatinine Phosphokinase (mcg/L)', min_value=0.0)
-    diabetes = st.selectbox('Diabetes (1 = Yes, 0 = No)', [0, 1])
-    ejection_fraction = st.number_input('Ejection Fraction (%)', min_value=0.0, format="%.1f")
-    high_blood_pressure = st.selectbox('High Blood Pressure (1 = Yes, 0 = No)', [0, 1])
-    platelets = st.number_input('Platelets (k/mL)', min_value=0.0, format="%.1f")
-    serum_creatinine = st.number_input('Serum Creatinine (mg/dL)', min_value=0.0, format="%.2f")
-    serum_sodium = st.number_input('Serum Sodium (mEq/L)', min_value=0.0, format="%.1f")
-    sex = st.selectbox('Sex (1 = Male, 0 = Female)', [0, 1])
-    smoking = st.selectbox('Smoking (1 = Yes, 0 = No)', [0, 1])
-    time = st.number_input('Follow-up period (days)', min_value=0.0, format="%.1f")
+    age = st.number_input('Age', min_value=1)
+    
+    anaemia_option = st.selectbox('Anaemia (Yes/No)', ['No', 'Yes'])
+    anaemia = 1 if anaemia_option == 'Yes' else 0 
+
+    sex_option = st.selectbox('Sex (Male/Female)', ['Female', 'Male'])
+    sex = 1 if sex_option == 'Male' else 0
+
+    if sex_option == 'Male':
+        st.write("You selected Male")
+        creatinine_phosphokinase = st.number_input('Creatinine Phosphokinase (Normal: 38 to 174 mcg/L)', min_value=0, max_value=200)
+    else:
+        st.write("You selected Female")
+        creatinine_phosphokinase = st.number_input('Creatinine Phosphokinase (Normal: 26 to 140 mcg/L)', min_value=0, max_value=200)
+
+    diabetes_option = st.selectbox('Diabetes (Yes/No)', ['No', 'Yes'])
+    diabetes = 1 if diabetes_option == 'Yes' else 0
+    
+    ejection_fraction = st.number_input('Ejection Fraction (Normal: 55-70 %)', min_value=0)
+    
+    high_blood_pressure_option = st.selectbox('High Blood Pressure (Yes/No)', ['No', 'Yes'])
+    high_blood_pressure = 1 if high_blood_pressure_option == 'Yes' else 0
+    
+    platelets = st.number_input('Platelets (k/mL)', min_value=0)
+    
+    serum_creatinine = st.number_input('Serum Creatinine (Normal: 0.6-1.2 mg/dL)', min_value=0.0, format="%.2f")
+    
+    serum_sodium = st.number_input('Serum Sodium (Normal: 135-145 mEq/L)', min_value=0)
+    
+    smoking_option = st.selectbox('Smoking (Yes/No)', ['No', 'Yes'])
+    smoking = 1 if smoking_option == 'Yes' else 0
+    
+    time = st.number_input('Follow-up period (days)', min_value=0)
 
     # Prepare data
     input_data = {
@@ -65,17 +91,18 @@ elif page == "Heart Failure Prediction":
         "time": time
     }
 
-    # Validate input and show prediction button
     if st.button("Predict"):
-        is_valid, validation_message = validate_input(input_data)
-        
-        if is_valid:
-            # Call the prediction API
-            with st.spinner('Predicting...'):
-                try:
-                    prediction = get_prediction(input_data)
-                    st.success(f"Prediction: {prediction['prediction']}")
-                except requests.exceptions.RequestException as e:
-                    st.error(f"Error calling the API: {e}")
-        else:
-            st.error(validation_message)
+        # Call the prediction API
+        with st.spinner('Predicting...'):
+            try:
+                prediction = get_prediction(input_data)
+                if prediction['prediction'] == 'Death Event':
+                    st.warning("Prediction: There is a chance that you will have heart failure.")
+                else:
+                    st.success("Prediction: You're in good health!")
+            except requests.exceptions.RequestException as e:
+                st.error(f"Error calling the API: {e}")
+
+    if st.button("Back to Home"):
+        st.session_state.page = 'home'
+        st.stop()
