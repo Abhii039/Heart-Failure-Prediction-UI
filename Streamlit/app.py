@@ -25,7 +25,7 @@ if 'page' not in st.session_state:
 # Navigation buttons
 if st.session_state.page == 'home':
     # Home Page Content
-    st.title("Welcome to the Heart Failure Prediction App")
+    st.title("Welcome to the Heart Failure Predictior")
     st.write("""
         This is an app that predicts the likelihood of heart failure based on clinical data.
         Click the button below to input data and get a prediction.
