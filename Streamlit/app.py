@@ -65,10 +65,10 @@ elif st.session_state.page == 'prediction':
     high_blood_pressure_option = st.selectbox('High Blood Pressure (Yes/No)', ['No', 'Yes'])
     high_blood_pressure = 1 if high_blood_pressure_option == 'Yes' else 0
     
-    platelets = st.number_input('Platelets (k/mL)', min_value=0 ,max_value=500000)
+    platelets = st.number_input('Platelets (k/mL)', min_value=0 ,max_value=1000000)
     
 
-    serum_creatinine = st.number_input('Serum Creatinine (Normal: 0.6-1.2 mg/dL)', min_value=0.0, max_value=2.0,format="%.2f")
+    serum_creatinine = st.number_input('Serum Creatinine (Normal: 0.6-1.2 mg/dL)', min_value=0.0, max_value=10.0,format="%.2f")
     
     serum_sodium = st.number_input('Serum Sodium (Normal: 135-145 mEq/L)', min_value=0 , max_value=200)
     
