@@ -47,7 +47,7 @@ elif st.session_state.page == 'prediction':
     anaemia_option = st.selectbox('Anaemia (Yes/No)', ['No', 'Yes'])
     anaemia = 1 if anaemia_option == 'Yes' else 0 
 
-    sex_option = st.selectbox('Sex (Male/Female)', ['Female', 'Male'])
+    sex_option = st.selectbox('Gender (Male/Female)', ['Female', 'Male'])
     sex = 1 if sex_option == 'Male' else 0
 
     if sex_option == 'Male':
