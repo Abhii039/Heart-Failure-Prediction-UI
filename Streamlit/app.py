@@ -52,10 +52,10 @@ elif st.session_state.page == 'prediction':
 
     if sex_option == 'Male':
         st.write("You selected Male")
-        creatinine_phosphokinase = st.number_input('Creatinine Phosphokinase (Normal: 38 to 174 mcg/L)', min_value=0, max_value=200)
+        creatinine_phosphokinase = st.number_input('Creatinine Phosphokinase (Normal: 38 to 174 mcg/L)', min_value=0, max_value=2500)
     else:
         st.write("You selected Female")
-        creatinine_phosphokinase = st.number_input('Creatinine Phosphokinase (Normal: 26 to 140 mcg/L)', min_value=0, max_value=200)
+        creatinine_phosphokinase = st.number_input('Creatinine Phosphokinase (Normal: 26 to 140 mcg/L)', min_value=0, max_value=2500)
 
     diabetes_option = st.selectbox('Diabetes (Yes/No)', ['No', 'Yes'])
     diabetes = 1 if diabetes_option == 'Yes' else 0
