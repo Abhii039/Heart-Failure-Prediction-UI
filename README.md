@@ -1,7 +1,5 @@
 # 🌟 Know Your Heart
 
-![Know Your Heart](https://via.placeholder.com/800x200.png?text=Know+Your+Heart) <!-- Replace with your project logo or image -->
-
 Welcome to **Know Your Heart**! This interactive web application is designed to empower users to understand and monitor their heart health effectively. Built with Streamlit, it offers a seamless and engaging user experience.
 
 ## 🚀 Live Demo
